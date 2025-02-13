@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 import {
 	type LowercaseUserIdentifierFormField,
 	lowercaseUserIdentifierFormFields,
 	lowercaseUserIdentifierFormFieldSchema,
-} from "./ConversationTemplate";
-import { stringWithoutHtmlTags, zodParse } from "./zod-helpers";
+} from './ConversationTemplate';
+import { stringWithoutHtmlTags, zodParse } from './zod-helpers';
 
 export const leadFormSchema = z
 	.record(

@@ -1,5 +1,5 @@
 ///// Generated file. Do not edit.
-import { z } from "zod";
+import { z } from 'zod';
 
 const jsonSchema: z.ZodType = z.lazy(() =>
 	z.union([

@@ -1,35 +1,33 @@
-import ISO6391 from "iso-639-1";
-import { resolveAcceptLanguage } from "resolve-accept-language";
-import { z } from "zod";
-
-import { bcp47ToISO639_1 } from "./Country";
+import ISO6391 from 'iso-639-1';
+import { resolveAcceptLanguage } from 'resolve-accept-language';
+import { z } from 'zod';
 
 // Keep these sorted alphabetically
 export const legacyLanguages = [
-	"da",
-	"en",
-	"es",
-	"fi",
-	"no",
-	"nn",
-	"nb",
-	"sv",
+	'da',
+	'en',
+	'es',
+	'fi',
+	'no',
+	'nn',
+	'nb',
+	'sv',
 ] as const;
 export type LegacyLanguage = (typeof legacyLanguages)[number];
 
 // BCP 47 language tags used in the UI
 export const langs = [
 	// Keep these sorted alphabetically
-	"da-DK",
-	"en-GB",
-	"es-ES",
-	"fi-FI",
-	"nb-NO",
-	"sv-SE",
+	'da-DK',
+	'en-GB',
+	'es-ES',
+	'fi-FI',
+	'nb-NO',
+	'sv-SE',
 ] as const;
 export const langSchema = z.enum(langs);
 export type Lang = z.infer<typeof langSchema>;
-export const defaultLang = "en-GB" as Lang;
+export const defaultLang = 'en-GB' as Lang;
 
 export const langStringSchema = z.record(langSchema, z.string());
 export type LangString = z.infer<typeof langStringSchema>;
@@ -44,16 +42,16 @@ export type LangString = z.infer<typeof langStringSchema>;
  * @returns
  */
 export function getAcceptLanguage(request: Request): string {
-	const acceptLanguage = request.headers.get("Accept-Language") || defaultLang;
+	const acceptLanguage = request.headers.get('Accept-Language') || defaultLang;
 	return preferredAcceptLanguage(acceptLanguage);
 }
 
 export function preferredAcceptLanguage(header: string): string {
-	const languageTags = header.split(",");
+	const languageTags = header.split(',');
 
 	const languages = languageTags
 		.map((tag) => {
-			const [language, qualityStr] = tag.trim().split(";q=");
+			const [language, qualityStr] = tag.trim().split(';q=');
 			const quality = qualityStr ? parseFloat(qualityStr) : 1.0;
 			return { language, quality };
 		})
@@ -79,14 +77,14 @@ export function getUiLang(
 	request: Request,
 	forcedThemeLanguage: string | undefined | null,
 ): Lang {
-	const queryLanguage = new URL(request.url).searchParams.get("language");
+	const queryLanguage = new URL(request.url).searchParams.get('language');
 	if (queryLanguage) {
 		return toLang(queryLanguage);
 	}
 	if (forcedThemeLanguage) {
 		return toLang(forcedThemeLanguage);
 	}
-	const acceptLanguage = request.headers.get("Accept-Language");
+	const acceptLanguage = request.headers.get('Accept-Language');
 	if (acceptLanguage) {
 		return getAcceptLang(acceptLanguage);
 	}
@@ -121,20 +119,20 @@ export function toLang(language: string): Lang {
 	}
 	const legacyLanguage = language as LegacyLanguage;
 	switch (legacyLanguage) {
-		case "en":
-			return "en-GB";
-		case "no":
-		case "nb":
-		case "nn":
-			return "nb-NO";
-		case "da":
-			return "da-DK";
-		case "sv":
-			return "sv-SE";
-		case "fi":
-			return "fi-FI";
-		case "es":
-			return "es-ES";
+		case 'en':
+			return 'en-GB';
+		case 'no':
+		case 'nb':
+		case 'nn':
+			return 'nb-NO';
+		case 'da':
+			return 'da-DK';
+		case 'sv':
+			return 'sv-SE';
+		case 'fi':
+			return 'fi-FI';
+		case 'es':
+			return 'es-ES';
 		default:
 			return defaultLang;
 	}
@@ -166,4 +164,9 @@ export function toLanguageNameWithNative(lang: Lang): string {
 	const name = ISO6391.getName(iso);
 	const nativeName = ISO6391.getNativeName(iso);
 	return `${name} (${nativeName})`;
+}
+
+export function bcp47ToISO639_1(bcp47: Lang): string {
+	// The first part of the BCP 47 tag usually corresponds to ISO 639-1
+	return bcp47.split('-')[0];
 }

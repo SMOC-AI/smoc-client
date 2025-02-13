@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const emptyArraySchema = z.array(z.string()).max(0);
 const languageAlternativesSchema = z.union([
@@ -38,19 +38,19 @@ const freeTextDataSchema = z.object({
 
 export type FreeTextData = z.infer<typeof freeTextDataSchema>;
 export const userIdentifierFormFields = [
-	"FIRST_NAME",
-	"LAST_NAME",
-	"PHONE_NUMBER",
-	"EMAIL",
-	"COMPANY",
-	"ID",
-	"STREET",
-	"CITY",
-	"ZIP",
-	"STATE",
-	"CONTRACT",
-	"COMMUNICATION",
-	"FREE_TEXT_INPUT",
+	'FIRST_NAME',
+	'LAST_NAME',
+	'PHONE_NUMBER',
+	'EMAIL',
+	'COMPANY',
+	'ID',
+	'STREET',
+	'CITY',
+	'ZIP',
+	'STATE',
+	'CONTRACT',
+	'COMMUNICATION',
+	'FREE_TEXT_INPUT',
 ] as const;
 
 export const userIdentifierFormFieldSchema = z.enum(userIdentifierFormFields);
@@ -75,7 +75,7 @@ const baseMessageSchema = z.object({
 	id: z.string(),
 	image: z.number().optional().nullable(),
 	uiIDs: uiIDsSchema.optional(),
-	sender: z.enum(["BOT", "USER"]),
+	sender: z.enum(['BOT', 'USER']),
 	urlBase: z.string().optional().nullable(),
 	language: z.string().optional().nullable(),
 	statement: z.string(),
@@ -99,7 +99,7 @@ const baseMessageSchema = z.object({
 
 	sendId: z.union([z.string(), z.boolean()]).optional().nullable(),
 	campaignId: z.union([z.string(), z.number()]).optional().nullable(),
-	simpleView: z.enum(["true", "false"]).optional().nullable(),
+	simpleView: z.enum(['true', 'false']).optional().nullable(),
 	embedded_code: z.string().optional().nullable(),
 	registerCustomer: z.union([z.string(), z.number()]).optional().nullable(),
 	contractData: contractDataSchema.optional().nullable(),
@@ -110,11 +110,11 @@ const baseMessageSchema = z.object({
 });
 
 const approvalResponseMessageSchema = baseMessageSchema.extend({
-	type: z.literal("APPROVAL_RESPONSE"),
+	type: z.literal('APPROVAL_RESPONSE'),
 });
 
 const disapprovalResponseMessageSchema = baseMessageSchema.extend({
-	type: z.literal("DISAPPROVAL_RESPONSE"),
+	type: z.literal('DISAPPROVAL_RESPONSE'),
 });
 
 const responseMessageSchema = z.union([
@@ -162,7 +162,7 @@ const surveyCampaignInfoSchema = z.object({
 });
 
 const surveyQuestionMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("SURVEY_QUESTION"),
+	type: z.literal('SURVEY_QUESTION'),
 	leadTo: z.string().optional().nullable(),
 	topText: languageAlternativesSchema.optional(),
 	answerIds: z.array(z.number()).optional().readonly(),
@@ -181,19 +181,19 @@ const surveyQuestionMessageSchema = baseResponsesMessageSchema.extend({
 export type SurveyQuestionMessage = z.infer<typeof surveyQuestionMessageSchema>;
 
 const greetingMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("GREETING"),
+	type: z.literal('GREETING'),
 });
 export type GreetingMessage = z.infer<typeof greetingMessageSchema>;
 
 const imageMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("IMAGE"),
+	type: z.literal('IMAGE'),
 	// This is bogus and not used!!!
 	imageUrl: z.string().url().optional(),
 });
 export type ImageMessage = z.infer<typeof imageMessageSchema>;
 
 const customHtmlMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("IFRAME_JAVASCRIPT"),
+	type: z.literal('IFRAME_JAVASCRIPT'),
 	embedded_code: z.string(), // Not optional,
 });
 export type CustomHtmlMessage = z.infer<typeof customHtmlMessageSchema>;
@@ -261,15 +261,15 @@ const couponDataSchema = z.object({
 	}),
 	// See case statement in messages_new.js
 	campaign_type: z.enum([
-		"view_display",
-		"view",
-		"view_video",
-		"video",
-		"visit_online",
-		"action_online",
-		"visit_and_action",
-		"visit",
-		"customer_acquisition",
+		'view_display',
+		'view',
+		'view_video',
+		'video',
+		'visit_online',
+		'action_online',
+		'visit_and_action',
+		'visit',
+		'customer_acquisition',
 	]),
 	custom_period: z.object({
 		endDate: z.string().regex(/^\d{4}\.\d{2}\.\d{2}$/),
@@ -349,26 +349,26 @@ const couponDataSchema = z.object({
 export type CouponData = z.infer<typeof couponDataSchema>;
 
 export const campaignMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("CAMPAIGN"),
+	type: z.literal('CAMPAIGN'),
 	compressFormHeight: z.boolean().optional().nullable(),
 	coupon: couponDataSchema.optional(),
 });
 export type CampaignMessage = z.infer<typeof campaignMessageSchema>;
 
 const textMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("TEXT"),
+	type: z.literal('TEXT'),
 });
 export type TextMessage = z.infer<typeof textMessageSchema>;
 
 const flowDecisionMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("FLOW_DECISION"),
+	type: z.literal('FLOW_DECISION'),
 	leadTo: z.string(),
 	answerIds: z.array(z.number()).readonly(),
 });
 
 const userIdentifierHandoverMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("USER_IDENTIFIER_HANDOVER"),
-	autoForward: z.union([z.boolean(), z.enum(["true", "false"])]).optional(),
+	type: z.literal('USER_IDENTIFIER_HANDOVER'),
+	autoForward: z.union([z.boolean(), z.enum(['true', 'false'])]).optional(),
 	openGraphView: z.boolean().optional(),
 	openGraphTitle: z.string().optional(),
 	withParameters: z.boolean().optional(),
@@ -383,7 +383,7 @@ export type UserIdentifierHandoverMessage = z.infer<
 >;
 
 const userIdentifierMultipleMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("USER_IDENTIFIER_MULTIPLE"),
+	type: z.literal('USER_IDENTIFIER_MULTIPLE'),
 	compressFormHeight: z.boolean().optional().nullable(),
 });
 export type UserIdentifierMultipleMessage = z.infer<
@@ -391,21 +391,21 @@ export type UserIdentifierMultipleMessage = z.infer<
 >;
 
 const userIdentifierMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("USER_IDENTIFIER"),
+	type: z.literal('USER_IDENTIFIER'),
 });
 export type UserIdentifierMessage = z.infer<typeof userIdentifierMessageSchema>;
 
 const chooseBrandMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("CHOOSE_BRAND"),
+	type: z.literal('CHOOSE_BRAND'),
 });
 export type ChooseBrandMessage = z.infer<typeof chooseBrandMessageSchema>;
 
 const theEndMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("THE_END"),
+	type: z.literal('THE_END'),
 });
 
 const userAttributeMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("USER_ATTRIBUTE"),
+	type: z.literal('USER_ATTRIBUTE'),
 	arguments: z.number().optional(),
 	attributes: z
 		.array(
@@ -421,14 +421,14 @@ const userAttributeMessageSchema = baseResponsesMessageSchema.extend({
 export type UserAttributeMessage = z.infer<typeof userAttributeMessageSchema>;
 
 const userAttributeApproveMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("USER_ATTRIBUTE_APPROVE"),
+	type: z.literal('USER_ATTRIBUTE_APPROVE'),
 });
 export type UserAttributeApproveMessage = z.infer<
 	typeof userAttributeApproveMessageSchema
 >;
 
 const userAttributeDisapproveMessageSchema = baseResponsesMessageSchema.extend({
-	type: z.literal("USER_ATTRIBUTE_DISAPPROVE"),
+	type: z.literal('USER_ATTRIBUTE_DISAPPROVE'),
 });
 export type UserAttributeDisapproveMessage = z.infer<
 	typeof userAttributeDisapproveMessageSchema

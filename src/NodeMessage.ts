@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { chatMessageSchema } from "./ChatMessage";
+import { chatMessageSchema } from './ChatMessage';
 
 export const nodeMessageSchema = z
 	.object({

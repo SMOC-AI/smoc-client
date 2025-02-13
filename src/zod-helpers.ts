@@ -1,6 +1,6 @@
-import { htmlToText } from "html-to-text";
-import { z, ZodError, type ZodType } from "zod";
-import { fromError, ValidationError } from "zod-validation-error";
+import { htmlToText } from 'html-to-text';
+import { z, ZodError, type ZodType } from 'zod';
+import { fromError, ValidationError } from 'zod-validation-error';
 
 /**
  * Parses an object with a Zod Schema and gives a detailed error message when it fails.
@@ -13,7 +13,7 @@ export function zodParse<Output>(
 		return schema.parse(body);
 	} catch (err) {
 		const error = fromError(err);
-		error.message += "\nObject:\n" + JSON.stringify(body, null, 2);
+		error.message += '\nObject:\n' + JSON.stringify(body, null, 2);
 		throw error;
 	}
 }

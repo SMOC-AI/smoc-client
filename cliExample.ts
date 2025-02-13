@@ -1,7 +1,7 @@
-import { makeJoinConversation } from "smoc-client";
+import { makeJoinConversation } from 'smoc-client';
 
 const flowUrl =
-	"http://localhost:8788/operator/smoc/operator_10_channel_zburvqt7/test_v3";
+	'http://localhost:8788/operator/smoc/operator_10_channel_zburvqt7/test_v3';
 
 const res = await fetch(flowUrl);
 if (!res.ok) {
@@ -9,9 +9,9 @@ if (!res.ok) {
 }
 const { wsUrl } = await res.json<{ wsUrl: string }>();
 
-const lang: Lang = "en-GB";
+const lang: Lang = 'en-GB';
 
-process.on("SIGINT", () => {
+process.on('SIGINT', () => {
 	process.exit();
 });
 
@@ -30,20 +30,20 @@ const client = joinConversation({
 		const lenAfter = messages.length;
 		if (lenAfter == -lenBefore) {
 			// It was an update message. Ignore...
-			console.log(chalk.blue("Ignoring update message"));
+			console.log(chalk.blue('Ignoring update message'));
 			return;
 		}
 
 		const proses = nodeMessage.chatMessage.elements.filter(
-			(element) => element.type === "prose",
+			(element) => element.type === 'prose',
 		) as Prose[];
 		const controls = nodeMessage.chatMessage.elements.filter(
 			isControl,
 		) as Control[];
 
 		const proseText = proses
-			.map((prose) => htmlToText(prose.options.text[lang] || ""))
-			.join("\n");
+			.map((prose) => htmlToText(prose.options.text[lang] || ''))
+			.join('\n');
 		if (controls.length > 0) {
 			const answer = await select({
 				message: chalk.magenta(proseText),
@@ -54,11 +54,11 @@ const client = joinConversation({
 			});
 			const text = answer.text[lang];
 			if (text === undefined) {
-				throw new Error("Text not found");
+				throw new Error('Text not found');
 			}
 			const visitorMessage: VisitorMessage = {
-				interlocutor: "visitor",
-				elements: [{ type: "prose", options: { text: createLangValue(text) } }],
+				interlocutor: 'visitor',
+				elements: [{ type: 'prose', options: { text: createLangValue(text) } }],
 			};
 			const nodeMessage: NodeMessage = {
 				chatMessage: visitorMessage,
@@ -68,7 +68,7 @@ const client = joinConversation({
 
 			if (answer.approvalAnswerId !== undefined) {
 				client.send({
-					type: "answer-approval-question",
+					type: 'answer-approval-question',
 					approvalAnswerId: answer.approvalAnswerId,
 					nodeMessage,
 				});
@@ -76,10 +76,10 @@ const client = joinConversation({
 				const surveyQuestionId =
 					nodeMessage.chatMessage.metadata?.surveyQuestionId;
 				if (surveyQuestionId === undefined) {
-					throw new Error("Survey question not found");
+					throw new Error('Survey question not found');
 				}
 				client.send({
-					type: "answer-survey-question",
+					type: 'answer-survey-question',
 					surveyAnswerId: answer.surveyAnswerId,
 					surveyQuestionId,
 					nodeMessage,

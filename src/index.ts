@@ -1,9 +1,9 @@
-import { toLeadForm } from "./LeadForm";
-import type { VisitorMessage } from "./ChatMessage";
-import type { NodeMessage } from "./NodeMessage";
+import { toLeadForm } from './LeadForm';
+import type { VisitorMessage } from './ChatMessage';
+import type { NodeMessage } from './NodeMessage';
 
-import type { Command } from "./Command";
-import { createLangValue } from "./Lang";
+import type { Command } from './Command';
+import { createLangValue } from './Lang';
 
 /**
  * Make a command from a form submission.
@@ -22,17 +22,17 @@ export function makeCommand(
 	const leadForm = toLeadForm(formData);
 	if (leadForm) {
 		return {
-			type: "submit-lead-form",
+			type: 'submit-lead-form',
 			form: leadForm,
 		};
 	}
 
-	const submitterValue = "value" in submitter ? submitter.value : null;
+	const submitterValue = 'value' in submitter ? submitter.value : null;
 	const text = submitter.innerText;
 
 	const visitorMessage: VisitorMessage = {
-		interlocutor: "visitor",
-		elements: [{ type: "prose", options: { text: createLangValue(text) } }],
+		interlocutor: 'visitor',
+		elements: [{ type: 'prose', options: { text: createLangValue(text) } }],
 	};
 
 	const nodeMessage: NodeMessage = {
@@ -41,19 +41,19 @@ export function makeCommand(
 		instanceId: crypto.randomUUID(),
 	};
 
-	if (typeof submitterValue === "string" && submitterValue) {
-		const surveyQuestionId = formData.get("survey_question_id");
+	if (typeof submitterValue === 'string' && submitterValue) {
+		const surveyQuestionId = formData.get('survey_question_id');
 
-		if (typeof surveyQuestionId === "string" && surveyQuestionId) {
+		if (typeof surveyQuestionId === 'string' && surveyQuestionId) {
 			return {
-				type: "answer-survey-question",
+				type: 'answer-survey-question',
 				surveyQuestionId: surveyQuestionId,
 				surveyAnswerId: submitterValue,
 				nodeMessage,
 			};
 		} else {
 			return {
-				type: "answer-approval-question",
+				type: 'answer-approval-question',
 				approvalAnswerId: submitterValue,
 				nodeMessage,
 			};
@@ -71,6 +71,6 @@ Form Data: ${JSON.stringify(formObj, null, 2)}
 Submitter: ${JSON.stringify(submitterValue)}
 	`);
 	throw new Error(
-		"Could not make a command from the form. See error console for details.",
+		'Could not make a command from the form. See error console for details.',
 	);
 }
