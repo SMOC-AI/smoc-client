@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-import { chatMessageSchema } from './ChatMessage';
+import { clientChatMessageSchema } from './ChatMessage';
 
-export const nodeMessageSchema = z
+export const clientNodeMessageSchema = z
 	.object({
 		path: z.array(z.string()).readonly(),
 		instanceId: z.string(),
-		chatMessage: chatMessageSchema,
+		chatMessage: clientChatMessageSchema,
 		progress: z.number().optional(),
 	})
 	.readonly();
-export type NodeMessage = z.infer<typeof nodeMessageSchema>;
+export type ClientNodeMessage = z.infer<typeof clientNodeMessageSchema>;

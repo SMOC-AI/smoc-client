@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { leadFormSchema } from './LeadForm';
-import { nodeMessageSchema } from './NodeMessage';
+import { clientNodeMessageSchema } from './NodeMessage';
 
 const performActionCommandSchema = z.object({
 	type: z.literal('action'),
@@ -16,13 +16,13 @@ const answerSurveyQuestionCommandSchema = z.object({
 	type: z.literal('answer-survey-question'),
 	surveyAnswerId: z.string(),
 	surveyQuestionId: z.string(),
-	nodeMessage: nodeMessageSchema,
+	nodeMessage: clientNodeMessageSchema,
 });
 
 const answerApprovalQuestionCommandSchema = z.object({
 	type: z.literal('answer-approval-question'),
 	approvalAnswerId: z.string(),
-	nodeMessage: nodeMessageSchema,
+	nodeMessage: clientNodeMessageSchema,
 });
 
 export const commandSchema = z.union([

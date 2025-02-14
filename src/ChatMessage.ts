@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 import { langSchema, langStringSchema } from './Lang';
-import type { nodeMessageSchema } from './NodeMessage';
 import { advertisementDetailsSchema } from './AdvertisementDetails';
 
 const langUrlSchema = z.record(langSchema, z.string().url());
@@ -331,9 +330,8 @@ export const visitorMessageSchema = z
 	.readonly();
 export type VisitorMessage = z.infer<typeof visitorMessageSchema>;
 
-export const chatMessageSchema = z.union([
+export const clientChatMessageSchema = z.union([
 	botMessageSchema,
 	visitorMessageSchema,
 ]);
-export type ChatMessage = z.infer<typeof chatMessageSchema>;
-export type NodeMessage = z.infer<typeof nodeMessageSchema>;
+export type ClientChatMessage = z.infer<typeof clientChatMessageSchema>;

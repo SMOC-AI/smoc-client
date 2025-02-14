@@ -7,7 +7,7 @@
 	"types": "./dist/index.d.ts",
 	"files": ["dist"],
 	"scripts": {
-		"build": "tsup",
+		"build": "npx tsx generate-exports.ts && tsup",
 		"test": "vitest"
 	},
 	"repository": {

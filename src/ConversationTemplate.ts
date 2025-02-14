@@ -459,6 +459,7 @@ const messageSequencesSchema = z.object({
 	comment: z.string().optional(),
 	messagesSequences: z.array(messageSequenceSchema).readonly(),
 });
+export type V15MessageSequence = z.infer<typeof messageSequencesSchema>;
 
 const rewardActionsSchema = z.object({
 	id: z.string(),
@@ -466,6 +467,7 @@ const rewardActionsSchema = z.object({
 		.array(z.array(responsesMessageSchema).readonly())
 		.readonly(),
 });
+export type RewardAction = z.infer<typeof rewardActionsSchema>;
 
 const edgeSchema = z.object({
 	id: z.string().optional(),
@@ -476,21 +478,32 @@ const edgeSchema = z.object({
 });
 export type V15Edge = z.infer<typeof edgeSchema>;
 
-export const conversationTemplateDefinitionSchema = z.object({
-	botType: z.string(),
-	version: z.number().optional(),
-	exitSequence: messageSequencesSchema,
-	mainSequence: messageSequencesSchema,
-	introSequence: messageSequencesSchema,
-	rewardActions: z.array(rewardActionsSchema).readonly(),
-	triageResponses: z.array(edgeSchema).optional().readonly(),
-	approvalResponses: z.array(edgeSchema),
-	completionResponses: z.array(edgeSchema).optional().readonly(),
-	alternativeResponses: z.array(edgeSchema).readonly(),
-	disapprovalResponses: z.array(edgeSchema).readonly(),
-	// Include other top-level keys as necessary...
-});
+export const conversationTemplateDefinitionSchema: z.ZodType<ConversationTemplateDefinition> =
+	z.object({
+		botType: z.string(),
+		version: z.number().optional(),
+		exitSequence: messageSequencesSchema,
+		mainSequence: messageSequencesSchema,
+		introSequence: messageSequencesSchema,
+		rewardActions: z.array(rewardActionsSchema).readonly(),
+		triageResponses: z.array(edgeSchema).optional().readonly(),
+		approvalResponses: z.array(edgeSchema),
+		completionResponses: z.array(edgeSchema).optional().readonly(),
+		alternativeResponses: z.array(edgeSchema).readonly(),
+		disapprovalResponses: z.array(edgeSchema).readonly(),
+		// Include other top-level keys as necessary...
+	});
 
-export type ConversationTemplateDefinition = z.infer<
-	typeof conversationTemplateDefinitionSchema
->;
+export interface ConversationTemplateDefinition {
+	botType: string;
+	version?: number;
+	exitSequence: V15MessageSequence;
+	mainSequence: V15MessageSequence;
+	introSequence: V15MessageSequence;
+	rewardActions: ReadonlyArray<RewardAction>;
+	triageResponses?: ReadonlyArray<V15Edge>;
+	approvalResponses: V15Edge[];
+	completionResponses?: ReadonlyArray<V15Edge>;
+	alternativeResponses: ReadonlyArray<V15Edge>;
+	disapprovalResponses: ReadonlyArray<V15Edge>;
+}
