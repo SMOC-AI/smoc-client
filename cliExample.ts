@@ -1,13 +1,18 @@
-import { makeJoinConversation } from 'smoc-client';
+// This is an example of a CLI client that can interact with the Smoc API client.
+//
 
-const flowUrl =
-	'http://localhost:8788/operator/smoc/operator_10_channel_zburvqt7/test_v3';
+import { select } from '@inquirer/prompts';
+import chalk from 'chalk';
+import { htmlToText } from 'html-to-text';
 
-const res = await fetch(flowUrl);
-if (!res.ok) {
-	throw new Error(`${res.status}: ${await res.text()}`);
-}
-const { wsUrl } = await res.json<{ wsUrl: string }>();
+import { createLangValue, makeJoinConversation, prepareConversationData, updateOrAppend, type ClientNodeMessage, type Control, type Lang, type Prose, type VisitorMessage, type MessageElement } from 'smoc-client';
+
+
+
+// const flowUrl = 'http://localhost:8788/operator/Smoc/operator_10_channel_zburvqt7/test_v1';
+// const flowUrl = 'http://localhost:8788/operator/Smoc/operator_10_channel_zburvqt7/test_v2';
+const flowUrl = 'https://main.bot-doc.pages.dev/smoc/operator_10_channel_zburvqt7/test_v7';
+
 
 const lang: Lang = 'en-GB';
 
@@ -15,9 +20,11 @@ process.on('SIGINT', () => {
 	process.exit();
 });
 
-let messages: readonly NodeMessage[] = [];
+let messages: readonly ClientNodeMessage[] = [];
 
-const joinConversation = makeJoinConversation(wsUrl);
+const conversationData = await prepareConversationData(flowUrl);
+const joinConversation = makeJoinConversation(conversationData.wsUrl);
+
 const client = joinConversation({
 	statusChanged: (status) => {
 		/* eslint-disable no-console */
@@ -37,13 +44,9 @@ const client = joinConversation({
 		const proses = nodeMessage.chatMessage.elements.filter(
 			(element) => element.type === 'prose',
 		) as Prose[];
-		const controls = nodeMessage.chatMessage.elements.filter(
-			isControl,
-		) as Control[];
+		const controls = nodeMessage.chatMessage.elements.filter(isControl) as Control[];
 
-		const proseText = proses
-			.map((prose) => htmlToText(prose.options.text[lang] || ''))
-			.join('\n');
+		const proseText = proses.map((prose) => htmlToText(prose.options.text[lang] || '')).join('\n');
 		if (controls.length > 0) {
 			const answer = await select({
 				message: chalk.magenta(proseText),
@@ -60,7 +63,7 @@ const client = joinConversation({
 				interlocutor: 'visitor',
 				elements: [{ type: 'prose', options: { text: createLangValue(text) } }],
 			};
-			const nodeMessage: NodeMessage = {
+			const nodeMessage: ClientNodeMessage = {
 				chatMessage: visitorMessage,
 				instanceId: crypto.randomUUID(),
 				path: [],
@@ -73,8 +76,7 @@ const client = joinConversation({
 					nodeMessage,
 				});
 			} else if (answer.surveyAnswerId !== undefined) {
-				const surveyQuestionId =
-					nodeMessage.chatMessage.metadata?.surveyQuestionId;
+				const surveyQuestionId = nodeMessage.chatMessage.metadata?.surveyQuestionId;
 				if (surveyQuestionId === undefined) {
 					throw new Error('Survey question not found');
 				}
@@ -92,3 +94,6 @@ const client = joinConversation({
 		}
 	},
 });
+
+const isControl = (element: MessageElement): element is Control =>
+	['button', 'radio'].includes(element.type);

@@ -34,7 +34,6 @@ export async function prepareConversationData(
 		].join('/'),
 		url,
 	);
-	console.log('apiStartConversationUrl', apiStartConversationUrl);
 	apiStartConversationUrl.search = url.search;
 
 	const startConversationRes = await fetch(apiStartConversationUrl);
