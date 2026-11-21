@@ -5,16 +5,28 @@
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
-	"files": ["dist"],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		},
+		"./page": "./dist/page.global.js"
+	},
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"build": "npx tsx generate-exports.ts && tsup",
-		"test": "vitest"
+		"test": "vitest run"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/SMOC-AI/smoc-client.git"
 	},
-	"keywords": ["SMOC"],
+	"keywords": [
+		"SMOC"
+	],
 	"author": "Sebastian Simenstad",
 	"license": "MIT",
 	"bugs": {
@@ -33,5 +45,8 @@
 		"vitest": "^3.0.5",
 		"zod": "^3.24.2",
 		"zod-validation-error": "^3.4.0"
+	},
+	"optionalDependencies": {
+		"@rollup/rollup-darwin-x64": "^4.64.3"
 	}
 }
