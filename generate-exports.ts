@@ -5,7 +5,12 @@ const srcDir = join(__dirname, 'src');
 const indexFile = join(srcDir, 'index.ts'); 
 
 const files = readdirSync(srcDir)
-  .filter(file => file.endsWith('.ts') && file !== 'index.ts')
+  .filter(
+    (file) =>
+      file.endsWith('.ts') &&
+      file !== 'index.ts' &&
+      file !== 'page.ts',
+  )
   .map(file => `export * from './${file.replace('.ts', '')}';`);
 
 writeFileSync(indexFile, files.join('\n') + '\n');
